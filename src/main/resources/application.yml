@@ -2,8 +2,8 @@ telegram:
   bot:
 #    не вписывайте данные, так как можете отправить в публичный репозиторий
 #    используйте переменные среды для установки значений
-    username: ${BOT_NAME}
-    token: ${BOT_TOKEN}
+    username: "XXX"
+    token: "XXX"
     notify:
       delay:
         value: 10
