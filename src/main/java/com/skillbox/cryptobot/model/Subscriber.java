@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Subscribers")
+@Table(name = "subscribers")
 @Data
 @NoArgsConstructor
 public class Subscriber {

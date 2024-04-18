@@ -3,7 +3,7 @@ telegram:
     #    не вписывайте данные, так как можете отправить в публичный репозиторий
     #    используйте переменные среды для установки значений
     username: "input your name"
-    token: "input taken"
+    token: "input your taken"
     notify:
       delay:
         value: 10
