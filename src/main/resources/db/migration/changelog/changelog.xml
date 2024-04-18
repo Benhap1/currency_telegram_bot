@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <!-- ChangeSet для создания таблицы Subscribers -->
+    <changeSet id="createTableSubscribers" author="ben4in">
+        <createTable tableName="subscribers">
+            <column name="user_uuid" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="telegram_id" type="BIGINT"/>
+            <column name="subscription_price" type="NUMERIC"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
