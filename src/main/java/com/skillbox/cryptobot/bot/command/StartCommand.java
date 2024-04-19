@@ -48,13 +48,11 @@ public class StartCommand implements IBotCommand {
 
         try {
             absSender.execute(answer);
-            // Добавление новой записи о пользователе в таблицу Subscribers
             Long telegramId = message.getChatId();
             if (!subscriberRepository.existsByTelegramId(telegramId)) {
-                // Запись о пользователе не существует, создаем новую запись
                 Subscriber newSubscriber = new Subscriber();
                 newSubscriber.setTelegramId(telegramId);
-                newSubscriber.setSubscriptionPrice(null); // Установка цены подписки в null
+                newSubscriber.setSubscriptionPrice(null);
                 subscriberRepository.save(newSubscriber);
             } else {
                 log.info("Запись о пользователе уже существует в базе данных");

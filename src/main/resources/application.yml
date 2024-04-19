@@ -1,7 +1,7 @@
 telegram:
   bot:
-    username: "name"
-    token: "token"
+    username: "@ben4inBot"
+    token: "6152406975:AAFIF0QRVB3JPBXJagyJIHS2E3NR4sKJVkY"
   notify:
     delay:
       value: 10

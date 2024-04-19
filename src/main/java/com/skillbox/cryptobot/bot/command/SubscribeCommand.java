@@ -44,10 +44,8 @@ public class SubscribeCommand implements IBotCommand {
 
                 BigDecimal desiredPrice = new BigDecimal(arguments[0]);
 
-                // Получаем текущую цену биткоина
                 BigDecimal currentPrice = cryptoCurrencyService.getBitcoinPrice();
 
-                // Сохраняем подписку пользователя
                 Long telegramId = message.getChatId();
                 Subscriber subscriber = subscriberRepository.findByTelegramId(telegramId)
                         .orElse(new Subscriber());
@@ -55,7 +53,6 @@ public class SubscribeCommand implements IBotCommand {
                 subscriber.setSubscriptionPrice(desiredPrice);
                 subscriberRepository.save(subscriber);
 
-                // Формируем ответное сообщение
                 answer.setText("Текущая цена биткоина " + TextUtil.toString(currentPrice) + " USD\n" +
                         "Новая подписка создана на стоимость " + TextUtil.toString(desiredPrice));
             } catch (NumberFormatException e) {
