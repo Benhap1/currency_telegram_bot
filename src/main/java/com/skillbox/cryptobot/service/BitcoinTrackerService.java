@@ -40,9 +40,13 @@ public class BitcoinTrackerService {
     }
 
     private void startTracking() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, 2, TimeUnit.MINUTES);
+        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
+            scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, 2, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            log.error("Error occurred while starting tracking", e);
+        }
     }
+
 
     private void checkBitcoinPriceAndNotifySubscribers() {
         log.info("Checking bitcoin price and notifying subscribers...");
