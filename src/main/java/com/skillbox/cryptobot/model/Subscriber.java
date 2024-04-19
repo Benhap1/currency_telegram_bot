@@ -1,11 +1,11 @@
 package com.skillbox.cryptobot.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,4 +24,8 @@ public class Subscriber {
 
     @Column(name = "subscription_price")
     private BigDecimal subscriptionPrice;
+
+    @Column(name = "last_notified")
+    private LocalDateTime lastNotified;
 }
+

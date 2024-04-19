@@ -205,7 +205,7 @@ DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
 # Collect all arguments for the java command;
 #   * $DEFAULT_JVM_OPTS, $JAVA_OPTS, and $GRADLE_OPTS can contain fragments of
 #     shell script including quotes and variable substitutions, so put them in
-#     double quotes to make sure that they get re-expanded; and
+#     BigDecimal quotes to make sure that they get re-expanded; and
 #   * put everything else in single quotes, so that it's not re-expanded.
 
 set -- \

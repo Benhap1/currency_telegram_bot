@@ -12,6 +12,7 @@
             </column>
             <column name="telegram_id" type="BIGINT"/>
             <column name="subscription_price" type="NUMERIC"/>
+            <column name="last_notified" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
