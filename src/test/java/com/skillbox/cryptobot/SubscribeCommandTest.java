@@ -43,22 +43,19 @@ class SubscribeCommandTest {
     @Test
     void testProcessMessage_WithValidArguments() throws IOException, TelegramApiException {
         // Arrange
-        Message message = mock(Message.class); // Mocking Message object
-        when(message.getChatId()).thenReturn(123456L); // Stubbing getChatId() method
+        Message message = mock(Message.class);
+        when(message.getChatId()).thenReturn(123456L);
         String[] arguments = {"10000"};
         BigDecimal currentPrice = new BigDecimal("50000");
 
         when(cryptoCurrencyService.getBitcoinPrice()).thenReturn(currentPrice);
         when(subscriberRepository.findByTelegramId(any())).thenReturn(Optional.empty());
 
-        // Act
         subscribeCommand.processMessage(absSender, message, arguments);
 
-        // Assert
         verify(absSender).execute(any(SendMessage.class));
         verify(subscriberRepository).save(any(Subscriber.class));
     }
-
     @Test
     void testProcessMessage_WithInvalidArguments() throws TelegramApiException {
         // Arrange
@@ -66,10 +63,8 @@ class SubscribeCommandTest {
         when(message.getChatId()).thenReturn(123456L); // Stubbing getChatId() method
         String[] arguments = {"abc"};
 
-        // Act
         subscribeCommand.processMessage(absSender, message, arguments);
 
-        // Assert
         verify(absSender).execute(any(SendMessage.class));
         verify(subscriberRepository, never()).save(any(Subscriber.class));
     }
