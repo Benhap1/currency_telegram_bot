@@ -1,7 +1,7 @@
 telegram:
   bot:
-    username: "имя"
-    token: "токен"
+    username: "name"
+    token: "token"
   notify:
     delay:
       value: 8
