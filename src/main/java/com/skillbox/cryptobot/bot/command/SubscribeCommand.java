@@ -66,7 +66,7 @@ public class SubscribeCommand implements IBotCommand {
         try {
             absSender.execute(answer);
         } catch (Exception e) {
-            log.error("Ошибка при отправке ответа на команду /subscribe", e);
+            log.error("Ошибка возникла в команде /subscribe", e);
         }
     }
 }

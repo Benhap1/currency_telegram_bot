@@ -47,7 +47,7 @@ public class UnsubscribeCommand implements IBotCommand {
         try {
             absSender.execute(answer);
         } catch (Exception e) {
-            log.error("Ошибка при отправке ответа на команду /unsubscribe", e);
+            log.error("Ошибка возникла в команде /unsubscribe", e);
         }
     }
 }

@@ -4,7 +4,9 @@ import com.skillbox.cryptobot.client.BinanceClient;
 import com.skillbox.cryptobot.model.Subscriber;
 import com.skillbox.cryptobot.model.SubscriberRepository;
 import com.skillbox.cryptobot.utils.TextUtil;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,32 +26,43 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class BitcoinTrackerService {
 
-    private final BinanceClient binanceClient;
-    private final SubscriberRepository subscriberRepository;
-    private final int notifyDelayMinutes;
-    private final AbsSender telegramBot;
+    @Autowired
+    private BinanceClient binanceClient;
 
-    public BitcoinTrackerService(BinanceClient binanceClient, SubscriberRepository subscriberRepository,
-                                 @Value("${telegram.notify.delay.value}") int notifyDelayValue,
-                                 @Value("${telegram.notify.delay.unit}") TimeUnit notifyDelayUnit, AbsSender telegramBot) {
-        this.binanceClient = binanceClient;
-        this.subscriberRepository = subscriberRepository;
-        this.notifyDelayMinutes = (int) Duration.of(notifyDelayValue, notifyDelayUnit.toChronoUnit()).toMinutes();
-        this.telegramBot = telegramBot;
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    @Value("${telegram.notify.delay.value}")
+    private int notifyDelayValue;
+
+    @Value("${telegram.notify.delay.unit}")
+    private TimeUnit notifyDelayUnit;
+
+    @Value("${telegram.parsing.interval.value}")
+    private int parsingIntervalValue;
+
+    @Value("${telegram.parsing.interval.unit}")
+    private TimeUnit parsingIntervalUnit;
+
+    @Autowired
+    private AbsSender telegramBot;
+
+    private int notifyDelayMinutes;
+    private int parsingIntervalMinutes;
+
+    @PostConstruct
+    private void init() {
+        notifyDelayMinutes = (int) Duration.of(notifyDelayValue, notifyDelayUnit.toChronoUnit()).toMinutes();
+        parsingIntervalMinutes = (int) Duration.of(parsingIntervalValue, parsingIntervalUnit.toChronoUnit()).toMinutes();
         startTracking();
     }
 
     private void startTracking() {
-        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
-            scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, 2, TimeUnit.MINUTES);
-        } catch (Exception e) {
-            log.error("Error occurred while starting tracking", e);
-        }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, parsingIntervalMinutes, TimeUnit.MINUTES);
     }
 
-
     private void checkBitcoinPriceAndNotifySubscribers() {
-        log.info("Checking bitcoin price and notifying subscribers...");
         try {
             BigDecimal currentPrice = binanceClient.getBitcoinPrice();
             LocalDateTime lastNotificationTime = LocalDateTime.now().minusMinutes(notifyDelayMinutes);
@@ -63,12 +76,11 @@ public class BitcoinTrackerService {
                 }
             });
         } catch (IOException e) {
-            log.error("Error while checking bitcoin price and notifying subscribers", e);
+            log.error("Ошибка при парсинге курса биткоина и уведомления", e);
         }
     }
 
     private void notifySubscriber(Subscriber subscriber, BigDecimal currentPrice) {
-        log.info("Sending notification to subscriber {}", subscriber.getTelegramId());
         SendMessage answer = new SendMessage();
         answer.setChatId(String.valueOf(subscriber.getTelegramId()));
         String roundedPrice = TextUtil.toString(currentPrice);
@@ -76,7 +88,7 @@ public class BitcoinTrackerService {
         try {
             telegramBot.execute(answer);
         } catch (TelegramApiException e) {
-            log.error("Error while sending notification to subscriber", e);
+            log.error("Ошибка возникла при отсылке уведомления", e);
         }
     }
 }

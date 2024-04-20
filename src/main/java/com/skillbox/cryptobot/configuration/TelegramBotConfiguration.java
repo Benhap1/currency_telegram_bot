@@ -19,7 +19,7 @@ public class TelegramBotConfiguration {
             botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(cryptoBot);
         } catch (TelegramApiException e) {
-            log.error("Error occurred while sending message to telegram!", e);
+            log.error("Ошибка возникла при отправке сообщения", e);
         }
         return botsApi;
     }

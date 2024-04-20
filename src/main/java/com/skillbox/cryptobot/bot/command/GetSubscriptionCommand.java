@@ -52,7 +52,7 @@ public class GetSubscriptionCommand implements IBotCommand {
         try {
             absSender.execute(answer);
         } catch (Exception e) {
-            log.error("Ошибка при отправке ответа на команду /get_subscription", e);
+            log.error("Ошибка возникла в команде /get_subscription", e);
         }
     }
 }

@@ -12,9 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-/**
- * Обработка команды начала работы с ботом
- */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -58,7 +55,7 @@ public class StartCommand implements IBotCommand {
                 log.info("Запись о пользователе уже существует в базе данных");
             }
         } catch (TelegramApiException e) {
-            log.error("Error occurred in /start command", e);
+            log.error("Ошибка возникла в /start команде", e);
         }
     }
 }
