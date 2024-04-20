@@ -58,11 +58,12 @@ public class BitcoinTrackerService {
     }
 
     private void startTracking() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, parsingIntervalMinutes, TimeUnit.MINUTES);
+        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
+            scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, parsingIntervalMinutes, TimeUnit.MINUTES);
+        }
     }
 
-    private void checkBitcoinPriceAndNotifySubscribers() {
+        private void checkBitcoinPriceAndNotifySubscribers() {
         try {
             BigDecimal currentPrice = binanceClient.getBitcoinPrice();
             LocalDateTime lastNotificationTime = LocalDateTime.now().minusMinutes(notifyDelayMinutes);
