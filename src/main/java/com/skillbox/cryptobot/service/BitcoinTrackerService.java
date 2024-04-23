@@ -4,10 +4,10 @@ import com.skillbox.cryptobot.client.BinanceClient;
 import com.skillbox.cryptobot.model.Subscriber;
 import com.skillbox.cryptobot.model.SubscriberRepository;
 import com.skillbox.cryptobot.utils.TextUtil;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -18,8 +18,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -48,22 +46,15 @@ public class BitcoinTrackerService {
     private AbsSender telegramBot;
 
     private int notifyDelayMinutes;
-    private int parsingIntervalMinutes;
 
-    @PostConstruct
-    private void init() {
-        notifyDelayMinutes = (int) Duration.of(notifyDelayValue, notifyDelayUnit.toChronoUnit()).toMinutes();
-        parsingIntervalMinutes = (int) Duration.of(parsingIntervalValue, parsingIntervalUnit.toChronoUnit()).toMinutes();
-        startTracking();
-    }
-
+    @Scheduled(fixedRate = 600000) //every 10 minutes
     private void startTracking() {
-        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
-            scheduler.scheduleAtFixedRate(this::checkBitcoinPriceAndNotifySubscribers, 0, parsingIntervalMinutes, TimeUnit.MINUTES);
-        }
+        notifyDelayMinutes = (int) Duration.of(notifyDelayValue, TimeUnit.valueOf(String.valueOf(notifyDelayUnit)).toChronoUnit()).toMinutes();
+        Duration.of(parsingIntervalValue, TimeUnit.valueOf(String.valueOf(parsingIntervalUnit)).toChronoUnit());
+        checkBitcoinPriceAndNotifySubscribers();
     }
 
-        private void checkBitcoinPriceAndNotifySubscribers() {
+    private void checkBitcoinPriceAndNotifySubscribers() {
         try {
             BigDecimal currentPrice = binanceClient.getBitcoinPrice();
             LocalDateTime lastNotificationTime = LocalDateTime.now().minusMinutes(notifyDelayMinutes);
